@@ -10,51 +10,34 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "users")
+@Table(name = "users" ,schema = "public")
 public class Users {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="user_id")
-    long id;
-
+    @Column(name = "user_id")
+    private int id;
     @Column(name = "email")
-    String email;
-
-    @Column(name = "first_name")
-    String firstName;
-
-    @Column(name = "last_name")
-    String lastName;
-
+    @Email(message = "*Please provide a valid Email")
+    @NotEmpty(message = "*Please provide an email")
+    private String email;
     @Column(name = "password")
-    @Transient
-    String password;
-
-    @Column(name = "active") //set default value to 1
-            int active = 1;
-
-    @Column(name="point")
-    int point=0;
-
+    @Length(min = 5, message = "*Your password must have at least 5 characters")
+    @NotEmpty(message = "*Please provide your password")
+    @org.springframework.data.annotation.Transient
+    private String password;
+    @Column(name = "name")
+    @NotEmpty(message = "*Please provide your name")
+    private String name;
+    @Column(name = "last_name")
+    @NotEmpty(message = "*Please provide your last name")
+    private String lastName;
+    @Column(name = "active")
+    private int active = 1;
     @ManyToMany(cascade = CascadeType.ALL)
-    // @JsonIgnore
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    Set<Role> roles;
+    private Set<Role> roles;
 
-    public Users(Users users) {
-        this.active = users.getActive();
-        this.email = users.getEmail();
-        this.roles = users.getRoles();
-        this.firstName = users.getFirstName();
-        this.lastName =users.getLastName();
-        this.id = users.getId();
-        this.password = users.getPassword();
-    }
 }
-
-
-
 
 
